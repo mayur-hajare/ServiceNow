@@ -1,0 +1,230 @@
+Time Sheet Link: https://hrfinweb.genpact.com/OA_HTML/OA.jsp?OAFunc=OAHOMEPAGE
+
+New Instance linked with the partners portal 
+
+Tickets categorization 
+
+A) Incident Management --> 
+   Reduce service disruptions, meet your sla's(service level agreement), improve technicians 
+    productivity and mange the entire life cycle of the ticket
+
+    TYPES OF SLA
+  
+    1) response sla
+    2) resolution sla
+
+    Severity 1 - 4 hours
+    Severity 2 - 8 hours
+    Severity 3 - 5 business days
+    Severity 4 - 10 business days 
+    Severity 5 - 15 business days
+
+B) Service Request Management --> 
+
+    Request from a user that initiates a service action which has been agreed as 
+
+    a normal part of service delivery.
+
+c) problem Management(PRP)
+
+    Analyze the root cause of problems and reduce recurring incidents.
+
+    (more tickets highly unstable application)
+
+    1) proactive
+    2) REACTIVE
+
+D ) Change Management
+
+    Plan, analyze and implement IT changes with visual workflows.
+
+    chg, crq
+
+E) Asset management
+  
+    Gain complete visibility into your assets, improve asset ustilization and manage software licenses with expiration 
+
+    notifications.
+
+===================================================================================================================================================================
+
+
+Incident Manages Process Owner
+
+    1st level Support
+
+    2nd level Support
+
+    3rd level Support
+
+    Major Incident Team
+
+** KPI Key Performance Indicator
+
+
+ISTM setup
+
+Task table ---> Inheritance purpose
+
+=========================================================================================================================
+
+1) STATS
+
+ 
+
+2) Update Sets
+
+    dev isnstance
+
+    test/qa
+
+    uat
+
+    production
+
+3) My Company Application - its used to developed and Custome Application for Company or Someone With customize things. 
+
+4) Reports -  Reports are shows on dashboard to get shortely Information/description to user and get daily data and other things
+                  
+            o  Bar reports enable you to compare scores across data dimensions.
+            o  Pie and Donut reports visualize the relationship between the parts and the whole of a data set using shapes such as pies.
+            o  Time Series reports visualize data over time. In addition to data from within your instances and imported data sources, you can also use MetricBase data in time series reports. For more information, see MetricBase application.
+            o  Multidimensional reports visualize data across dimensions in a single table or graph.
+            o  Scores visualize single data points either across ranges or as a single value.
+            o  Statistical reports visualize data with statistical values such as medians and means.
+            o  Other reports include calendars, maps, and lists.
+
+5) Dashboard
+
+ 
+
+6) Time sheet
+
+ 
+
+ 
+
+===============================================================================================================================
+
+incident.FORM
+incident.LIST
+ used in All search to direct access to Form and List.
+
+configuring the forms
+
+===================================================================================================================
+
+ Plugins are used to get additional functionality in instance
+
+I18N: Internationalization
+Dynamic Translation
+
+ 
+==================================================================================================================
+
+User 
+
+Groups 
+
+Roles
+
+
+users added to group
+
+roles added to the group
+
+ 
+
+Parent Table
+
+Base Table --> The table which is extended by other table but not inself extends any other table - Ex. incident table extends task table.
+
+Core Table -->  task , change, problem table.
+
+============================================================================================================================================
+Adding the role through scripting
+
+table
+
+role sys id
+
+user sys id
+
+insert();
+
+=====================================================================================================================
+
+steps to load the data --> System import set
+
+** Transformation Map
+ 
+
+Staging table --> data will be stored in the staging table temparally then it will be stored in the target table means actual table.
+
+Auto Transformation
+
+=====================================================================================================================
+
+UI Policies and Client Scripts
+
+Service Now is deveided into 2 type of scripting 
+
+1 -  Client Side Scripting
+2 -  Server Side Scripting
+
+Client Script : On cellEdit / On Submit / On Change / On Load
+
+Business Rule : BR is worked on DataBase tasks. like -  Insert /  Update / Delete / Query 
+ - Its Exucute = Before / After / Async / Diaplay  
+Script Include : Its used when the script is Reusable or Script is run on server side . Script Include is ia called from the Client Side , Any server Side Script .
+- SI used in Business Rules , Reference Qualifiers ,UI Actions and Andother SI also.
+UI Action : All Buttons in the serivce now is customizable . When were click the buttons some script is executed.
+UI Policy : UI Policy is a rule that applies on Form to dynamically change . 1 ) Manadatory 2) Visibality 3) Edit ablity .
+Data Policy : Data Policy is used to set mandatory and read-only states on form fields.
+the purpose of the data policy is to standardize the same data across service Now.
+
+Event Register >> Business Rule >> Email      Notification
+If the Client callable setting is checked, the client can use AJAX to call the Business Rule.
+Email Notification >> Email Script
+Script Include >> Business Rule 
+
+ 
+
+================================================================================================
+
+CLIENT SCRIPTS
+
+In which table comments are getting saved ----> sys_journal_field
+
+add process flow to application support 
+
+Vendor Name Update; Bank Details; Other Updates
+
+APO Dash board Sys ID : 0514f80f97b32110b8531c800153af1f
+
+
+** gs ---> Glide System
+
+conditons / Filters
+
+stateANYTHING
+stateIN1,2,3,6
+
+
+==================================================================================================
+
+Schedules Jobs and Notifications
+
+
+Email, Email Properties,
+
+ 
+${URI} link to the incident
+
+${URI_REF} link + incident number
+
+Inbound Email Actions
+
+Mail scripts
+
+Genpact - Production - Sign In
