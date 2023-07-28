@@ -1,0 +1,380 @@
+Introduction
+Business Rule is a piece of JavaScript configured to run when a record is displayed, inserted, updated, deleted, or when a table is queried.
+
+
+A Business Rule can be set to run before or after the database action has occurred. Unlike UI policies, Business Rules do not monitor fields on a form
+
+Each Business Rules includes what table to run against and timing (before or after insert and more), what condition to evaluate, what script to run based on the evaluation, and if it is client-callable.
+
+Business Rules run on the server, but can be client callable. If the Client callable setting is checked, the client can use AJAX to call the Business Rule.
+
+Business Rules are consistently applied to records regardless of how they are accessed-through forms, lists, or Web Services. This is one major difference between Business Rules and Client Scripts,
+
+Business Rules are not real-time:
+	They do not monitor filed on a form
+	They monitor records as there are inserted or updated.
+When Do Business Rules Execute?
+The When setting lets you select when the Business Rule should execute:br13.PNG
+
+After a record is saved to the database.Business Rules execute after form submission and after the record update in the database.Cascade changes made to approval filed of service catalog request to the RITMs attached to the request.
+
+br8.PNG
+
+Before a record is saved to the database.Business rules execute after form submission and before the record update in the database. Example: Calculation of priority based on impact and urgency
+
+imgbr9.PNG
+
+Before Query Before query Business Rules execute before a query is sent to the database. When a user is not authorized to see all records in a list, the “Number of row removed by security constraints” message appears. Before query Business Rules act like ACL and prevents users from seeing certain records. When access is controlled through a before query Business Rule ,the “Number of row removed by security constraints” message is not displayed and the user does not know access is restricted.
+
+br10.PNG
+
+Async(queued) Async Business Rules run after records are inserted/modified/queried.Run asynchronously asScheduled Jobs.Async Business Rules are queued by the scheduler to run as soon as they can be fit in.This allows the current transaction to finish without waiting for the rule.
+
+SLA calculation are another example of Async Business Rules.
+
+Caution: if using the Delete action on Async Business Rule, the record will not exist when the script runs.
+
+We can see Async Business Rule queued up for execution as below
+
+System Scheduler >Scheduled Jobs>Scheduled Jobs
+Asysnc Business Rules appear with their names prepended with ASYNC.async business rules241120191.JPGbr11.PNG
+
+Example:
+
+SLA calculation Notify CI owner if a CI is added as an Configuration Item to an Incident
+
+Try to use Async Business Rule instead of After Business Rule when immediate response is not required.
+Example:
+
+Problem Statement:
+
+Notify CI owner if a CI is added as an Configuration Item to an Incident
+
+Solution:
+
+Create a event in Event Registry Named “notify.ci.owner”
+Create a notification named “Notify CI Owner”
+Create a Async Business rule “Call event “notify.ci.owner”” to call event “notify.ci.owner”
+Event Registryasynceventregisty241120191.PNG
+
+Notificationasynceventregisty241120192.PNGasynceventregisty241120193.PNGasynceventregisty241120194.PNG
+
+Business Rulesasync business rules241120192.JPGasynceventregisty241120195.PNG
+
+Go to Incident table and update CI of one incidentasync business rules241120196.JPG
+
+Go to email log and checkasync business rules241120194.JPG
+
+display before the record is displayed (this can utilize a scratchpad area to access server data).Display Business Rules run after the data is read from the database and before the form is presented to the user.Display Business Rules execute when a user requests a record form. Data is read from the DB. The display rules are executed and finally the form is presented to the user.
+
+g_scratchpad is like global variables that can be populated by a Display Business Rule.
+this object is then passed to client side.
+For example, sys_created_by field is not part of incident form. To access the value from client script we have to make a server call. Server calls are expensive so it is advices to load populate this value using Display Business rule and pass it to the client.
+
+=================================================================================================================================================================================================================
+Steps to create Business Rules
+// To create Business rules in left navigation pane write Business Rules. Business Rules comes under system definitionbr1.PNG
+// Click on New button to create a Business Rules.br2.PNGbr3.PNG
+// If we select the advanced button, we will get the advanced tab to write a script.br7.PNG
+If you want to create a record or update a record in incident table, then if you want to run script before or after the creation /updating the record you can use the business rules.br4.PNGbr5.PNGbr6.PNG
+Examples of Business Rules
+If the attachment is duplicate in service portal's catalog item then we can use the below BR
+
+(function executeRule(current, previous /*null when async*/) {
+	var gr =new GlideRecord('sys_attachment');
+	gr.addQuery('table_name','LIKE','sp_portal');
+	gr.addQuery('file_name','=',current.file_name);
+	gr.orderBy('table_sys_id');
+	gr.orderByDesc('sys_created_on');
+	gr.query();
+	
+	//gs.addInfoMessage("current filename"+current.file_name);
+	//gs.addInfoMessage("current datetime"+current.sys_created_on);
+	//gs.addInfoMessage("current sys_id"+current.table_sys_id);
+	
+	while(gr.next()){
+		
+		//gs.addInfoMessage("IN TABLE"+gr.file_name);
+		//gs.addInfoMessage("IN TABLE"+gr.sys_created_on);
+		//gs.addInfoMessage("IN TABLE"+gr.table_sys_id);
+		
+		if(gr.table_sys_id==current.table_sys_id){
+			gr.deleteRecord();
+		}
+	}
+	
+})(current, previous);
+Update Assignment group in Request table from SCTASK using BR
+ExampleOfBR2307.PNG
+
+(function executeRule(current, previous /*null when async*/) {
+	
+	// Add your code here
+	var sctask = new GlideRecord('sc_task');
+	sctask.addQuery('number', current.number);
+	sctask.query();
+	//sctask.setWorkflow(false);
+	if (sctask.next()) {
+		
+		//gs.print(sctask.u_primary_affected_site);
+		//gs.print("SC_TASK" + sctask.number);
+		//gs.print(sctask.assignment_group.getDisplayValue());
+		//gs.print(sctask.request_item.getDisplayValue());
+		
+		
+		var ritm = new GlideRecord('sc_req_item');
+		
+		ritm.addQuery('sys_id', sctask.request_item);
+		ritm.query();
+		//ritm.setWorkflow(false);
+		if (ritm.next()) {
+			
+			//gs.print("RITM" + sctask.request_item.getDisplayValue());
+			//gs.print("REQ" + ritm.request.getDisplayValue());
+			ritm.assignment_group = sctask.assignment_group;
+			var req = new GlideRecord('sc_request');
+			req.addQuery('sys_id', ritm.request);
+			req.query();
+			//req.setWorkflow(false);
+			
+			if (req.next()) {
+				req.assignment_group = sctask.assignment_group;
+				req.update();
+				
+			}
+			
+		}
+		
+	}
+	
+})(current, previous);
+Update RITM field from Catalog item Variables(entered by user when filling catalog form)
+Here OPCO is a field in catalog Item
+
+ExampleOfBR3307.PNGWe need to update OPCO value in “Primary affected site”(u_primary_affected_site) in RITMExampleOfBR4307.PNGExampleOfBR5307.PNG
+
+(function executeRule(current, previous) {
+	
+	//gs.addInfoMessage("opco..........................."+opco);
+	
+	var opco="";
+	var ritm = new GlideRecord('sc_req_item');
+	ritm.addQuery('number', current.number);
+	ritm.query();
+	//ritm.setWorkflow(false);
+	if(ritm.next()){
+		
+		//gs.addInfoMessage("opco..........................."+opco);
+		var gr = new GlideRecord('sc_item_option_mtom');//this tables hold all user entered data in variables of catalogItem
+		gr.addQuery('request_item', ritm.sys_id);
+		gr.query();
+		//gr.setWorkflow(false);
+		while (gr.next())
+			{
+			if(gr.sc_item_option.item_option_new.getDisplayValue()=="OPCO")
+				{
+				gs.print(gr.sc_item_option.value);
+				opco = gr.sc_item_option.value;
+				
+			}
+		}
+		
+		ritm.u_primary_affected_site = opco;
+		ritm.update();
+		
+	}
+})(current, previous);
+Content
+Introduction
+When Do Business Rules Execute?
+Steps to create Business Rules
+Examples of Business Rules
+
+
+ YouTube Videos
+Understanding Request, RITM, Task in ServiceNow 
+Steps to create a case in ServiceNow (CSM)
+Performance Analytics in 10 mins 
+Event Management in 10 minutes - part1 
+Event Management in 10 minutes - part2 
+Custom Lookup List
+Script includes in 5 minutes 
+Interactive Filter in 5 minutes 
+UI Policy in 6 Minutes 
+Client Side Script Versus Server Side Script in 3 minutes 
+
+
+Topics
+Snow
+Performance Analytics
+Interactive Filter
+Configuration
+Widgets
+Indicator
+ServiceNow Scripts
+Script include
+Useful scripts
+Basic Glide Scripts
+Client Script
+Advance Glide Script
+Glide System Script
+Admin
+Import Set
+Work Flow
+ACL
+SLA
+Notification
+Core Application
+UI Policy
+UI Action
+Client Script
+CAB Workbech
+Data Policy
+Connect Support
+Catalog
+Request,RITM,Task
+Service Catalogs
+Event
+Discovery
+Discovery
+CSM
+Create Case From Email
+CSM
+Event Management
+Event Management
+HR
+HR Module
+Integrations
+SSO Integration
+LDAP Integration
+SCCM Integration
+AWS Intergration
+Slack Integration
+CTI Integration
+Jira Integration
+Ebonding ServiceNow
+SOAP Integration
+IBM Netcool Integration
+VIP Mobile App Integration
+Rest Integration
+Service Portal
+Service Portal Widgets
+Service Portal
+Questions
+Interview Questions
+
+
+Post By Date
+
+Saturday, November 5, 2022
+Send email with attachment
+Monday, November 1, 2021
+Custom webapp
+Friday, October 29, 2021
+Custom file attachment with field mapping
+Sunday, May 9, 2021
+Github Servicenow Integration
+Monday, April 19, 2021
+Customer satisfaction survey
+Sunday, March 21, 2021
+Agent Workspace
+Saturday, March 20, 2021
+Advanced Script Include
+Wednesday, January 20, 2021
+Ui page example
+Color on field label & field
+Tuesday, January 19, 2021
+Slack integration usecase 1
+Saturday, January 2, 2021
+Slack integration usecase 2
+Sunday, July 5, 2020
+Service portal Widgets
+Sunday, June 14, 2020
+Spring Security Oauth2 configurations
+Saturday, June 13, 2020
+Springboot Testing
+Spring Basic Auth Security
+Saturday, May 16, 2020
+Jhipster Blueprint By Example
+Saturday, May 9, 2020
+Apache httpd cache
+Thursday, May 7, 2020
+Sso Integration
+Servicenow Discovery
+Wednesday, May 6, 2020
+Ldap Integration
+Tuesday, May 5, 2020
+Sccm Integration
+Aws Intergration
+Sunday, May 3, 2020
+Git Squash Example
+Saturday, May 2, 2020
+Generate Ppt From Template Java
+Servicenow slack integration
+Thursday, April 30, 2020
+Cti Integration
+Jira Integration
+Saturday, April 25, 2020
+Spring Cloud Gateway With Spring Security
+Microservice Design Pattern
+Friday, April 17, 2020
+Create Case From Email
+Saturday, April 4, 2020
+Ebonding Servicenow
+csm
+Sunday, November 24, 2019
+Script include in ServiceNow
+Wednesday, November 13, 2019
+Soap Integration
+Wednesday, November 6, 2019
+Import Set
+Saturday, November 2, 2019
+HR Service Delivery
+Wednesday, October 30, 2019
+Workflow
+Event Management
+Tuesday, October 29, 2019
+Useful Script ServiceNow
+Business Rules
+Basic glide scripts
+Monday, July 29, 2019
+ACL
+Performance analytics(PA) Interactive Filter
+Various Configurations in Performance analytics(PA)
+Service Portal
+Performance Analytics(PA) Widgets
+Performance Analytics(PA) Indicator
+Performance Analytics(PA) Buckets
+Performance Analytics(PA) Automated Breakdown
+Sunday, May 5, 2019
+Vip Mobile App Integration
+Thursday, April 4, 2019
+Performance Analytics(PA) Scorecard
+Performance analytics(PA) Manual Breakdown
+Monday, April 1, 2019
+Performance Analytics(PA) Dashboards
+Monday, March 25, 2019
+SLA
+Notification
+User,Group & Roles
+UI Policy
+UI Action
+ServiceNow interview questions
+Sunday, March 24, 2019
+Client Script
+Rest Integration
+Understanding the Request, RITM, Task
+Service Catalogs
+Events in ServiceNow
+Advance glide script in ServiceNow
+CAB Workbench
+Monday, March 4, 2019
+Performance analytics(PA)
+Performance Analytics(PA) Indicator source
+Sunday, May 8, 2016
+Glide System – Advance scripting in ServiceNow
+Data Policy
+Sunday, May 1, 2016
+Connect Support
+  
+
