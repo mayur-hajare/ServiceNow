@@ -1,0 +1,124 @@
+        Servicenow Training Course Content
+
+MODULE - 1
+o     ServiceNow Introduction.
+o     ServiceNow UI Overview.
+o     Application Navigator.
+o     Branding (configuration UI16 and basic configuration).
+
+MODULE - 2
+o     List.
+o     Forms.
+o     Filters.
+o     Configure filters.
+o     Create and apply filter.
+o     Creating the view
+o     Configuring the list view and form view.
+o     Plugin’s introduction.
+
+MODULE - 3
+o     Creating Users, groups.
+o     Role.
+o     Adding users to the groups.
+o     Adding users and groups to role.
+o     Adding users to the groups.
+o     What is assignment rule and where we can use it?
+o     Creating Assignment Rule.
+o     Tables (row & column) creation.
+o     OOO (out of the box table available in SNOW) (Parent table concept).
+o     Adding Data to the tables
+o     Configuring the table
+
+MODULE - 4
+o     Overview of import set and transform map.
+o     Import set example and transform map.
+o     Over-view of configuration item.
+o     Knowledge management overview and creation.
+Catalogs (service creations catalog) and its type (with variables)
+o     Attaching Knowledge article to the catalog.
+
+MODULE - 5
+o     Knowledge management overview and creation.
+o     Catalogs (service creations catalog) and its type (with variables)
+o     Attaching Knowledge article to the catalog.
+o     Record Producers and order Guides
+
+MODULE - 6
+o     Catalog workflow
+o     Sla Definition and uses in Catalog or other tables.
+o     Reports
+o     Report creation in SNOW
+
+MODULE - 7
+o     Introduction to Update-Set and Its functionality and its uses and creations.
+o     Importing and Exporting of Update Set XML
+o     Introduction to Development (scripting Introduction)
+o     Client-Side Introduction.
+
+MODULE - 8
+o     UI policy
+o     Data Policy
+o     Client Script
+1. Onload
+2. OnSubmit
+3. OnChange
+4. OnCellEdit
+o     Coding Introduction on Client-Side Scripting.
+Client-Side Api used in Coding (GlideForm (g_form) , g_userClass)
+
+MODULE - 9
+o     Business Rule
+Types and Coding Discussion:-
+1. Before
+2. After
+3. Asyc
+4. DIsplay
+o     Coding Queries and Examples
+
+MODULE - 10
+o     Server-Side Api’s (Glide-System API)
+1. GlideRecord
+2. Query-Conditions
+3. Encoded Query
+4. GlideDateTime ()
+o     Coding Queries and Examples
+
+MODULE - 11
+o     Glide Ajax
+o     Notifications
+o     Create Notification(email)
+o     Create Notification using Events
+o     Dictionary Override
+
+MODULE - 12
+o     ACL Introduction
+1. Read—Read Access to the field level on the form
+2. Write—Write or Edit Access
+3. Create—Create the ACL
+o     Schedule Job.
+
+MODULE - 13
+o     Doubt Clearing Session
+o     REST and Soap API Intro
+o     Table API
+
+MODULE - 14
+o     Example of Table API(using HTTP Methods
+o     POST, Get, Update etc
+o     Integration Via 3rd party tool like postman
+o     Via post man(get and post )method Demostration
+
+MODULE - 15
+1. Scripted rest API over-View.
+2. Use of scripted rest api.
+3. Using Scripted rest API (get method demostrationS)
+
+MODULE - 16
+o     Inbound and outbound email
+o     Email properties
+o     Mid-server/servers
+o     Debugging of code over-view Intro
+
+MODULE - 17 CONCLUSION
+o     Summarizing the discussed points.
+o     PRACTICE MOCK INTERVIEW SESSIONS.
